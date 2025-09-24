@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSS Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Your CSS styles here */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #1e88e5;
+        }
+        
+        .card-header i {
+            font-size: 1.8rem;
+            margin-right: 15px;
+        }
+        
+        .card h2 {
+            font-size: 1.5rem;
+        }
+        
+        .stat {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #0d47a1;
+            margin: 10px 0;
+        }
+        
+        .stat-desc {
+            color: #666;
+        }
+        
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            transition: background 0.3s ease;
+        }
+        
+        .tab.active {
+            background: #1e88e5;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .tab:hover:not(.active) {
+            background: #e3f2fd;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: #1e88e5;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #0d47a1;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #e3f2fd;
+            color: #1e88e5;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .action-btn {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        .edit-btn {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .toast.success {
+            background-color: #4CAF50;
+            opacity: 1;
+        }
+        
+        .toast.error {
+            background-color: #f44336;
+            opacity: 1;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .edit-mode {
+            background-color: #fff9c4;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-hands-helping"></i>
+                <div>
+                    <h1>NSS Management System</h1>
+                    <p class="subtitle">Empowering Communities Through Service</p>
+                </div>
+            </div>
+        </header>
+        
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-users"></i>
+                    <h2>Volunteers</h2>
+                </div>
+                <div class="stat" id="volunteer-count">0</div>
+                <p class="stat-desc">Active NSS Volunteers</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h2>Events</h2>
+                </div>
+                <div class="stat" id="event-count">0</div>
+                <p class="stat-desc">Upcoming Community Events</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-tasks"></i>
+                    <h2>Activities</h2>
+                </div>
+                <div class="stat" id="activity-count">0</div>
+                <p class="stat-desc">Completed This Month</p>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('volunteers')">Volunteers</div>
+            <div class="tab" onclick="showTab('events')">Events</div>
+            <div class="tab" onclick="showTab('activities')">Activities</div>
+            <div class="tab" onclick="showTab('reports')">Reports</div>
+        </div>
+        
+        <div id="volunteers" class="content-section">
+            <h2>Manage Volunteers</h2>
+            <p>Add, edit, or remove NSS volunteers from the database.</p>
+            
+            <form id="volunteerForm">
+                <input type="hidden" id="volunteerId" value="">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter volunteer's full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter volunteer's email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="Enter volunteer's phone number">
+                </div>
+                
+                <div class="form-group">
+                    <label for="college">College/University</label>
+                    <input type="text" id="college" placeholder="Enter institution name">
+                </div>
+                
+                <button type="submit" class="btn"><i class="fas fa-plus"></i> Add Volunteer</button>
+                <button type="button" id="cancelEdit" class="btn" style="background: #666; display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
+            </form>
+            
+            <h3 style="margin-top: 30px;">Volunteer List</h3>
+            <table id="volunteerTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>College</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="volunteerTableBody">
+                    <!-- Volunteers will be loaded here dynamically -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="events" class="content-section" style="display: none;">
+            <h2>Manage Events</h2>
+            <p>Schedule and manage NSS events and community service activities.</p>
+            
+            <form id="eventForm">
+                <input type="hidden" id="eventId" value="">
+                <div class="form-group">
+                    <label for="eventName">Event Name</label>
+                    <input type="text" id="eventName" placeholder="Enter event name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventDate">Event Date</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventLocation">Location</label>
+                    <input type="text" id="eventLocation" placeholder="Enter event location">
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea id="eventDescription" placeholder="Describe the event"></textarea>
+                </div>
+                
+                <button type="submit" class="btn"><i class="fas fa-calendar-plus"></i> Schedule Event</button>
+                <button type="button" id="cancelEventEdit" class="btn" style="background: #666; display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
+            </form>
+            
+            <h3 style="margin-top: 30px;">Upcoming Events</h3>
+            <table id="eventTable">
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="eventTableBody">
+                    <!-- Events will be loaded here dynamically -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="activities" class="content-section" style="display: none;">
+            <h2>Manage Activities</h2>
+            <p>Track and manage NSS activities and community service projects.</p>
+            
+            <form id="activityForm">
+                <input type="hidden" id="activityId" value="">
+                <div class="form-group">
+                    <label for="activityName">Activity Name</label>
+                    <input type="text" id="activityName" placeholder="Enter activity name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="activityDate">Activity Date</label>
+                    <input type="date" id="activityDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="activityHours">Hours Contributed</label>
+                    <input type="number" id="activityHours" placeholder="Enter hours" min="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="activityDescription">Description</label>
+                    <textarea id="activityDescription" placeholder="Describe the activity"></textarea>
+                </div>
+                
+                <button type="submit" class="btn"><i class="fas fa-plus"></i> Add Activity</button>
+                <button type="button" id="cancelActivityEdit" class="btn" style="background: #666; display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
+            </form>
+            
+            <h3 style="margin-top: 30px;">Recent Activities</h3>
+            <table id="activityTable">
+                <thead>
+                    <tr>
+                        <th>Activity Name</th>
+                        <th>Date</th>
+                        <th>Hours</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="activityTableBody">
+                    <!-- Activities will be loaded here dynamically -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="reports" class="content-section" style="display: none;">
+            <h2>Generate Reports</h2>
+            <p>Create reports on volunteer participation and activity metrics.</p>
+            
+            <form id="reportForm">
+                <div class="form-group">
+                    <label for="reportType">Report Type</label>
+                    <select id="reportType">
+                        <option value="volunteer">Volunteer Participation</option>
+                        <option value="events">Event Summary</option>
+                        <option value="activities">Activity Report</option>
+                        <option value="hours">Hours Contribution</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate">
+                </div>
+                
+                <div class="form-group">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate">
+                </div>
+                
+                <button type="submit" class="btn"><i class="fas fa-chart-bar"></i> Generate Report</button>
+            </form>
+            
+            <h3 style="margin-top: 30px;">Report Output</h3>
+            <div id="reportOutput" style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                <p>Select report parameters and generate to view data.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>NSS Management System &copy; 2023 | Developed Community Service</p>
+        </footer>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Tab navigation function
+        function showTab(tabName) {
+            // Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show the selected tab content
+            document.getElementById(tabName).style.display = 'block';
+            
+            // Add active class to the clicked tab
+            event.target.classList.add('active');
+            
+            // Load data for the selected tab
+            if (tabName === 'volunteers') {
+                loadVolunteers();
+            } else if (tabName === 'events') {
+                loadEvents();
+            } else if (tabName === 'activities') {
+                loadActivities();
+            }
+        }
+
+        // API base URL
+        const API_BASE = 'http://localhost:3000/api';
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        // Function to load volunteers
+        async function loadVolunteers() {
+            try {
+                const response = await fetch(`${API_BASE}/volunteers`);
+                const volunteers = await response.json();
+                
+                // Update volunteer count
+                document.getElementById('volunteer-count').textContent = volunteers.length;
+                
+                // Clear the table
+                const tbody = document.querySelector('#volunteerTableBody');
+                tbody.innerHTML = '';
+                
+                // Add volunteers to table
+                volunteers.forEach(volunteer => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${volunteer.name}</td>
+                        <td>${volunteer.email}</td>
+                        <td>${volunteer.phone || 'N/A'}</td>
+                        <td>${volunteer.college || 'N/A'}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editVolunteer('${volunteer._id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteVolunteer('${volunteer._id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading volunteers:', error);
+                showToast('Error loading volunteers.', 'error');
+            }
+        }
+
+        // Function to load events
+        async function loadEvents() {
+            try {
+                const response = await fetch(`${API_BASE}/events`);
+                const events = await response.json();
+                
+                // Update event count
+                document.getElementById('event-count').textContent = events.length;
+                
+                // Clear the table
+                const tbody = document.querySelector('#eventTableBody');
+                tbody.innerHTML = '';
+                
+                // Add events to table
+                events.forEach(event => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${event.name}</td>
+                        <td>${new Date(event.date).toLocaleDateString()}</td>
+                        <td>${event.location}</td>
+                        <td>${event.description || 'N/A'}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editEvent('${event._id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteEvent('${event._id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading events:', error);
+                showToast('Error loading events.', 'error');
+            }
+        }
+
+        // Function to load activities
+        async function loadActivities() {
+            try {
+                const response = await fetch(`${API_BASE}/activities`);
+                const activities = await response.json();
+                
+                // Update activity count
+                document.getElementById('activity-count').textContent = activities.length;
+                
+                // Clear the table
+                const tbody = document.querySelector('#activityTableBody');
+                tbody.innerHTML = '';
+                
+                // Add activities to table
+                activities.forEach(activity => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${activity.name}</td>
+                        <td>${new Date(activity.date).toLocaleDateString()}</td>
+                        <td>${activity.hours}</td>
+                        <td>${activity.description || 'N/A'}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editActivity('${activity._id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteActivity('${activity._id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading activities:', error);
+                showToast('Error loading activities.', 'error');
+            }
+        }
+
+        // Function to add a new volunteer
+        async function addVolunteer(event) {
+            event.preventDefault();
+            
+            const volunteerId = document.getElementById('volunteerId').value;
+            const volunteer = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                college: document.getElementById('college').value
+            };
+            
+            try {
+                let response;
+                if (volunteerId) {
+                    response = await fetch(`${API_BASE}/volunteers/${volunteerId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(volunteer)
+                    });
+                } else {
+                    response = await fetch(`${API_BASE}/volunteers`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(volunteer)
+                    });
+                }
+                
+                if (response.ok) {
+                    showToast(volunteerId ? 'Volunteer updated successfully!' : 'Volunteer added successfully!');
+                    
+                    // Reset form
+                    document.getElementById('volunteerForm').reset();
+                    document.getElementById('volunteerId').value = '';
+                    document.getElementById('cancelEdit').style.display = 'none';
+                    
+                    // Reload volunteers
+                    loadVolunteers();
+                } else {
+                    showToast('Error saving volunteer', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving volunteer:', error);
+                showToast('Error saving volunteer', 'error');
+            }
+        }
+
+        // Function to edit a volunteer
+        async function editVolunteer(id) {
+            try {
+                const response = await fetch(`${API_BASE}/volunteers/${id}`);
+                const volunteer = await response.json();
+                
+                document.getElementById('volunteerId').value = volunteer._id;
+                document.getElementById('name').value = volunteer.name;
+                document.getElementById('email').value = volunteer.email;
+                document.getElementById('phone').value = volunteer.phone || '';
+                document.getElementById('college').value = volunteer.college || '';
+                
+                document.getElementById('cancelEdit').style.display = 'inline-block';
+                document.getElementById('volunteers').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error loading volunteer:', error);
+                showToast('Error loading volunteer details', 'error');
+            }
+        }
+
+        // Function to delete a volunteer
+        async function deleteVolunteer(id) {
+            if (confirm('Are you sure you want to delete this volunteer?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/volunteers/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        showToast('Volunteer deleted successfully!');
+                        loadVolunteers();
+                    } else {
+                        showToast('Error deleting volunteer', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting volunteer:', error);
+                    showToast('Error deleting volunteer', 'error');
+                }
+            }
+        }
+
+        // Function to add a new event
+        async function addEvent(event) {
+            event.preventDefault();
+            
+            const eventId = document.getElementById('eventId').value;
+            const newEvent = {
+                name: document.getElementById('eventName').value,
+                date: document.getElementById('eventDate').value,
+                location: document.getElementById('eventLocation').value,
+                description: document.getElementById('eventDescription').value
+            };
+            
+            try {
+                let response;
+                if (eventId) {
+                    response = await fetch(`${API_BASE}/events/${eventId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(newEvent)
+                    });
+                } else {
+                    response = await fetch(`${API_BASE}/events`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(newEvent)
+                    });
+                }
+                
+                if (response.ok) {
+                    showToast(eventId ? 'Event updated successfully!' : 'Event added successfully!');
+                    
+                    // Reset form
+                    document.getElementById('eventForm').reset();
+                    document.getElementById('eventId').value = '';
+                    document.getElementById('cancelEventEdit').style.display = 'none';
+                    
+                    // Reload events
+                    loadEvents();
+                } else {
+                    showToast('Error saving event', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving event:', error);
+                showToast('Error saving event', 'error');
+            }
+        }
+
+        // Function to edit an event
+        async function editEvent(id) {
+            try {
+                const response = await fetch(`${API_BASE}/events/${id}`);
+                const event = await response.json();
+                
+                document.getElementById('eventId').value = event._id;
+                document.getElementById('eventName').value = event.name;
+                document.getElementById('eventDate').value = event.date.split('T')[0];
+                document.getElementById('eventLocation').value = event.location;
+                document.getElementById('eventDescription').value = event.description || '';
+                
+                document.getElementById('cancelEventEdit').style.display = 'inline-block';
+                document.getElementById('events').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error loading event:', error);
+                showToast('Error loading event details', 'error');
+            }
+        }
+
+        // Function to delete an event
+        async function deleteEvent(id) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/events/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        showToast('Event deleted successfully!');
+                        loadEvents();
+                    } else {
+                        showToast('Error deleting event', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting event:', error);
+                    showToast('Error deleting event', 'error');
+                }
+            }
+        }
+
+        // Function to add a new activity
+        async function addActivity(event) {
+            event.preventDefault();
+            
+            const activityId = document.getElementById('activityId').value;
+            const activity = {
+                name: document.getElementById('activityName').value,
+                date: document.getElementById('activityDate').value,
+                hours: document.getElementById('activityHours').value,
+                description: document.getElementById('activityDescription').value
+            };
+            
+            try {
+                let response;
+                if (activityId) {
+                    response = await fetch(`${API_BASE}/activities/${activityId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(activity)
+                    });
+                } else {
+                    response = await fetch(`${API_BASE}/activities`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(activity)
+                    });
+                }
+                
+                if (response.ok) {
+                    showToast(activityId ? 'Activity updated successfully!' : 'Activity added successfully!');
+                    
+                    // Reset form
+                    document.getElementById('activityForm').reset();
+                    document.getElementById('activityId').value = '';
+                    document.getElementById('cancelActivityEdit').style.display = 'none';
+                    
+                    // Reload activities
+                    loadActivities();
+                } else {
+                    showToast('Error saving activity', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving activity:', error);
+                showToast('Error saving activity', 'error');
+            }
+        }
+
+        // Function to edit an activity
+        async function editActivity(id) {
+            try {
+                const response = await fetch(`${API_BASE}/activities/${id}`);
+                const activity = await response.json();
+                
+                document.getElementById('activityId').value = activity._id;
+                document.getElementById('activityName').value = activity.name;
+                document.getElementById('activityDate').value = activity.date.split('T')[0];
+                document.getElementById('activityHours').value = activity.hours;
+                document.getElementById('activityDescription').value = activity.description || '';
+                
+                document.getElementById('cancelActivityEdit').style.display = 'inline-block';
+                document.getElementById('activities').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error loading activity:', error);
+                showToast('Error loading activity details', 'error');
+            }
+        }
+
+        // Function to delete an activity
+        async function deleteActivity(id) {
+            if (confirm('Are you sure you want to delete this activity?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/activities/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        showToast('Activity deleted successfully!');
+                        loadActivities();
+                    } else {
+                        showToast('Error deleting activity', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting activity:', error);
+                    showToast('Error deleting activity', 'error');
+                }
+            }
+        }
+
+        // Function to generate a report
+        async function generateReport(event) {
+            event.preventDefault();
+            
+            const reportType = document.getElementById('reportType').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            try {
+                let reportData;
+                let reportOutput = document.getElementById('reportOutput');
+                
+                if (reportType === 'volunteer') {
+                    const response = await fetch(`${API_BASE}/volunteers`);
+                    const volunteers = await response.json();
+                    
+                    reportOutput.innerHTML = `
+                        <h3>Volunteer Participation Report</h3>
+                        <p>Total Volunteers: ${volunteers.length}</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>College</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${volunteers.map(volunteer => `
+                                    <tr>
+                                        <td>${volunteer.name}</td>
+                                        <td>${volunteer.email}</td>
+                                        <td>${volunteer.college || 'N/A'}</td>
+                                        <td>${volunteer.status}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else if (reportType === 'events') {
+                    const response = await fetch(`${API_BASE}/events`);
+                    const events = await response.json();
+                    
+                    reportOutput.innerHTML = `
+                        <h3>Event Summary Report</h3>
+                        <p>Total Events: ${events.length}</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Event Name</th>
+                                    <th>Date</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${events.map(event => `
+                                    <tr>
+                                        <td>${event.name}</td>
+                                        <td>${new Date(event.date).toLocaleDateString()}</td>
+                                        <td>${event.location}</td>
+                                        <td>${event.status}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else if (reportType === 'activities') {
+                    const response = await fetch(`${API_BASE}/activities`);
+                    const activities = await response.json();
+                    
+                    const totalHours = activities.reduce((sum, activity) => sum + activity.hours, 0);
+                    
+                    reportOutput.innerHTML = `
+                        <h3>Activity Report</h3>
+                        <p>Total Activities: ${activities.length}</p>
+                        <p>Total Hours Contributed: ${totalHours}</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Activity Name</th>
+                                    <th>Date</th>
+                                    <th>Hours</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${activities.map(activity => `
+                                    <tr>
+                                        <td>${activity.name}</td>
+                                        <td>${new Date(activity.date).toLocaleDateString()}</td>
+                                        <td>${activity.hours}</td>
+                                        <td>${activity.status}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else if (reportType === 'hours') {
+                    const response = await fetch(`${API_BASE}/activities`);
+                    const activities = await response.json();
+                    
+                    // Filter activities by date range if provided
+                    let filteredActivities = activities;
+                    if (startDate && endDate) {
+                        filteredActivities = activities.filter(activity => {
+                            const activityDate = new Date(activity.date);
+                            return activityDate >= new Date(startDate) && activityDate <= new Date(endDate);
+                        });
+                    }
+                    
+                    const totalHours = filteredActivities.reduce((sum, activity) => sum + activity.hours, 0);
+                    
+                    reportOutput.innerHTML = `
+                        <h3>Hours Contribution Report</h3>
+                        <p>Date Range: ${startDate || 'All time'} to ${endDate || 'Present'}</p>
+                        <p>Total Activities: ${filteredActivities.length}</p>
+                        <p>Total Hours Contributed: ${totalHours}</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Activity Name</th>
+                                    <th>Date</th>
+                                    <th>Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${filteredActivities.map(activity => `
+                                    <tr>
+                                        <td>${activity.name}</td>
+                                        <td>${new Date(activity.date).toLocaleDateString()}</td>
+                                        <td>${activity.hours}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                }
+                
+                showToast('Report generated successfully!');
+            } catch (error) {
+                console.error('Error generating report:', error);
+                showToast('Error generating report', 'error');
+            }
+        }
+
+        // Cancel edit functions
+        document.getElementById('cancelEdit').addEventListener('click', function() {
+            document.getElementById('volunteerForm').reset();
+            document.getElementById('volunteerId').value = '';
+            this.style.display = 'none';
+        });
+
+        document.getElementById('cancelEventEdit').addEventListener('click', function() {
+            document.getElementById('eventForm').reset();
+            document.getElementById('eventId').value = '';
+            this.style.display = 'none';
+        });
+
+        document.getElementById('cancelActivityEdit').addEventListener('click', function() {
+            document.getElementById('activityForm').reset();
+            document.getElementById('activityId').value = '';
+            this.style.display = 'none';
+        });
+
+        // Form submission handlers
+        document.getElementById('volunteerForm').addEventListener('submit', addVolunteer);
+        document.getElementById('eventForm').addEventListener('submit', addEvent);
+        document.getElementById('activityForm').addEventListener('submit', addActivity);
+        document.getElementById('reportForm').addEventListener('submit', generateReport);
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial data
+            loadVolunteers();
+            loadEvents();
+            loadActivities();
+            
+            // Set today's date as default for date inputs
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('eventDate').value = today;
+            document.getElementById('activityDate').value = today;
+            
+            // Set default date range for reports (current month)
+            const firstDay = new Date();
+            firstDay.setDate(1);
+            document.getElementById('startDate').value = firstDay.toISOString().split('T')[0];
+            document.getElementById('endDate').value = today;
+        });
+    </script>
+</body>
+</html>
